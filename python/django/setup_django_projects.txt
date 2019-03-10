@@ -1,0 +1,23 @@
+WINDOWS
+
+1. py -3 -m venv <env name>
+2. <env name>\Scripts\activate
+3. pip install django
+4. django-admin startproject <project name>
+
+ Optional
+    on settings, change:
+      LANGUAGE_CODE = 'pt-br'
+
+    TIME_ZONE = 'America/Sao_Paulo'
+    
+5. python manage.py runserver     
+
+Optional
+  
+LINUX
+
+1. py -3 -m venv <env name>
+2. source <env name>\bin\activate
+3. pip install django
+4. django-admin startproject <project name>
