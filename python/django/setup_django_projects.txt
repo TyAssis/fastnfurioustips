@@ -21,3 +21,6 @@ LINUX
 2. source <env name>\bin\activate
 3. pip install django
 4. django-admin startproject <project name>
+
+*** LEMBRETE
+Sempre que alterar um model, parar o runserver e rodar $ python manage.py makemigrations
