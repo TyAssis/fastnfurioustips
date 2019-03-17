@@ -1,0 +1,111 @@
+# Docker comands
+
+1. Init a container
+  
+  docker run <image> // runs in background
+  
+  docker run <image> -ti /bin/bash // run and open a container shell
+  // bin bash is the default entry point when a docker is opened, it can be changed 
+  
+  docker create <image> --name <docker_name> // create just create, not run. --name: Any name you want to a container
+    Ex.:
+
+    docker run ubuntu
+    docker run debian
+    docker run centos
+
+ Delete a image
+ 
+  docker rmi -f <container_ID or container_name>
+ 
+ Quit a container
+ 
+  Ctrl + d
+  
+ Quit, but maintain active
+ 
+ Ctrl + p + q
+ 
+2. List containers
+
+  Active
+    docker ps
+  All
+    docker ps -a
+  List images
+    docker images
+  List history
+    docker history <container_ID or container_name>
+    
+3. Inspect a container
+
+  docker inspect <args>
+  args: 
+    
+4. Creating volume
+
+  docker run centos -v /<volume_name> // It shares a filesystem between container and host
+  // to see where volume is in container, go to cd /, then ls
+  // to see where volume is in host docker, run: docker run inspect -f {{.Mounts}} <container ID or container name>
+  
+  Creating first in host, then pass fs to the container
+    
+  In host docker:  
+    mkdir /<path>
+  Create a docker point to the <path> you created in host
+    docker run -ti -v /root/primeiro_dockerfile:/volume debian
+  To share volume between containers, use --volume-from
+  
+5. Limits in docker
+
+  Limit the memory
+    docker run -ti --memory 256m debian
+  Inspect memory
+    docker inspect <container_ID or container name> | grep -i mem
+    
+  To limit a memory from a already created container, use:
+    docker update -m 512m <container_ID>
+    
+  The same to cpu, but changes --memory for --cpu-shares
+    docker run -ti --name container1 --cpu-shares 1024
+    
+6. Docker file <a makefile to docker>
+
+A sample: create a file named "Dockerfile" and edit it like this:
+
+FROM debian
+MAINTAINER Taylon taylon@taylon
+# use debian to mount the docker image
+
+RUN apt-get update && apt-get install apache2 $$ apt-get clean
+# each run is a layer, so execute this whit &&, cause to the next layer, the previous will be read-only
+
+ADD opa.txt /diretorio/
+CMD ["sh", "-c", "echo", "$HOME"]
+LABEL Description="Bla bla bla bla giropops"
+COPY opa.txt /diretorio/
+ENTRYPOINT ["/usr/bin/apache2ctl", "-D", "FOREGROUND"]
+ENV meunome="Taylon"
+EXPOSE 80
+# EXPOSE shows the port that is exposed in a container
+USER taylon
+# default user of this image, default is root if not specified
+WORKDIR /container_raiz
+# when opening a container, come to this dir
+VOLUME /volume_container
+
+Another sample
+
+mkdir /home/<user_name>/docker_file/ && cd /home/<user_name>/docker_file && vim Dockerfile
+
+Dockerfile
+FROM debian
+RUN /bin/echo "It is a build sample!"
+
+save it.
+Run docker build -t first_image:1.0 .
+// . indicates the folder that contains the Dockerfile
+// : indicates the version of an image
+
+
+ 
